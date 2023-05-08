@@ -19,7 +19,7 @@ import { useAuth } from "hook";
 import CreateTaskDialog from "components/CreateTaskDialog";
 
 const pages: string[] = ["Workspace", "Create"];
-const settings: string[] = ["Profile", "Account", "Dashboard", "Logout"];
+const settings: string[] = ["Profile", "Logout"];
 
 const CreateTaskButton = styled(Button)<ButtonProps>(({ theme }) => ({
   color: theme.palette.getContrastText(blue[500]),
