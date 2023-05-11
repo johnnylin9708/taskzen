@@ -3,14 +3,11 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import Paper, { PaperProps } from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Draggable from "react-draggable";
@@ -59,7 +56,6 @@ const CreateTaskDialog = (props: Props) => {
 
     const data = new FormData(event.currentTarget);
 
-    console.log(data.get("manager"));
     console.log(data.get("participatedTeam"));
     console.log(data.get("participator0"));
     console.log(data.get("participator1"));
@@ -78,21 +74,21 @@ const CreateTaskDialog = (props: Props) => {
         <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
           Project
         </DialogTitle>
-
-        <DialogContent>
-          {/* <DialogContentText>
+        <Box
+          component="form"
+          // sx={{
+          //   "& .MuiTextField-root": { m: 1, width: "25ch" },
+          // }}
+          // noValidate
+          // autoComplete="off"
+          onSubmit={handleSubmit}
+        >
+          <DialogContent>
+            {/* <DialogContentText>
             To subscribe to this website, please enter your email address here.
             We will send updates occasionally.
           </DialogContentText> */}
-          <Box
-            component="form"
-            // sx={{
-            //   "& .MuiTextField-root": { m: 1, width: "25ch" },
-            // }}
-            // noValidate
-            // autoComplete="off"
-            onSubmit={handleSubmit}
-          >
+
             <Grid sx={{ m: 3 }}>
               <Selector
                 data={[
@@ -131,16 +127,15 @@ const CreateTaskDialog = (props: Props) => {
                 />
               ))}
             </Grid>
-            <Button type="submit">Create</Button>
-          </Box>
-        </DialogContent>
+          </DialogContent>
 
-        <DialogActions>
-          {/* <Button autoFocus onClick={handleDialogClose}>
-            Cancel
-          </Button> */}
-          {/* <Button type="submit">Create</Button> */}
-        </DialogActions>
+          <DialogActions>
+            <Button autoFocus onClick={handleDialogClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Create</Button>
+          </DialogActions>
+        </Box>
       </Dialog>
     </div>
   );

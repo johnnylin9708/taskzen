@@ -16,7 +16,7 @@ import { styled } from "@mui/material/styles";
 import Button, { ButtonProps } from "@mui/material/Button";
 import { blue } from "@mui/material/colors";
 import { useAuth } from "hook";
-import CreateTaskDialog from "components/CreateTaskDialog";
+import CreateTaskDialog from "components/TaskCreationDialog";
 
 const pages: string[] = ["Workspace", "Create"];
 const settings: string[] = ["Profile", "Logout"];
