@@ -29,7 +29,7 @@ export function useAuth() {
     // Remove the token from local storage and clear the user state
     localStorage.removeItem("token");
     setIsAuth(false);
-    navigate("/login");
+    navigate("/");
   }
 
   return { isAuth, authLogin, authLogout };

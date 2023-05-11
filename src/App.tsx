@@ -6,8 +6,10 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { HomePage, LoginPage, WorkspacePage } from "pages";
+import { LoginPage, WorkspacePage } from "pages";
 import Navigation from "components/Navigation";
+import Setting from "components/Setting";
+import Member from "components/Member";
 import { useAuth } from "hook";
 
 function PrivateRoute() {
@@ -32,7 +34,10 @@ const App: React.FC = () => {
             {/* <Route path="/" element={<HomePage />} /> */}
             <Route path="/" Component={LoginPage} />
             <Route element={<PrivateRoute />}>
-              <Route path="/workspace" element={<WorkspacePage />} />
+              <Route path="/workspace" element={<WorkspacePage />}>
+                <Route element={<Setting />} path="setting" />
+                <Route element={<Member />} path="member" />
+              </Route>
             </Route>
           </Routes>
         </BrowserRouter>

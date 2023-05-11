@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -70,10 +71,44 @@ const Drawer = styled(MuiDrawer, {
 const SidebarDrawer = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleDrawerAction = () => {
     setOpen(!open);
   };
+
+  const listItemButtons = (text: string) => {
+    return (
+      <ListItemButton
+        sx={{
+          minHeight: 48,
+          justifyContent: open ? "initial" : "center",
+          px: 2.5,
+        }}
+        onClick={() => navigate(`/workspace/${text.toLowerCase()}`)}
+      >
+        <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: open ? 3 : "auto",
+            justifyContent: "center",
+          }}
+        >
+          {text === "Board" ? (
+            <SpaceDashboardIcon />
+          ) : text === "Member" ? (
+            <GroupsIcon />
+          ) : text === "Setting" ? (
+            <SettingsIcon />
+          ) : (
+            <></>
+          )}
+        </ListItemIcon>
+        <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+      </ListItemButton>
+    );
+  };
+
   return (
     <>
       <Drawer
@@ -92,34 +127,9 @@ const SidebarDrawer = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Board", "Member", "Setting"].map((text, index) => (
+          {["Member", "Setting"].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {text === "Board" ? (
-                    <SpaceDashboardIcon />
-                  ) : text === "Member" ? (
-                    <GroupsIcon />
-                  ) : text === "Setting" ? (
-                    <SettingsIcon />
-                  ) : (
-                    <></>
-                  )}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
+              {listItemButtons(text)}
             </ListItem>
           ))}
         </List>
