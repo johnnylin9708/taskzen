@@ -6,10 +6,9 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { LoginPage, WorkspacePage } from "pages";
+import { HomePage, LoginPage } from "pages";
 import Navigation from "components/Navigation";
 import Setting from "components/Setting";
-import Member from "components/Member";
 import { useAuth } from "hook";
 
 function PrivateRoute() {
@@ -32,11 +31,17 @@ const App: React.FC = () => {
           <Navigation />
           <Routes>
             {/* <Route path="/" element={<HomePage />} /> */}
-            <Route path="/" Component={LoginPage} />
+            <Route path="/login" Component={LoginPage} />
             <Route element={<PrivateRoute />}>
-              <Route path="/workspace" element={<WorkspacePage />}>
-                <Route element={<Setting />} path="setting" />
-                <Route element={<Member />} path="member" />
+              <Route path="/home" element={<HomePage />}>
+                {/* <Route element={<Setting />} path="setting" />
+                <Route element={<Member />} path="member" /> */}
+              </Route>
+            </Route>
+            <Route element={<PrivateRoute />}>
+              <Route path="/setting" element={<Setting />}>
+                {/* <Route element={<Setting />} path="setting" />
+                <Route element={<Member />} path="member" /> */}
               </Route>
             </Route>
           </Routes>

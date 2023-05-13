@@ -1,13 +1,15 @@
 import React from "react";
-import logo from "logo.svg";
+import { Outlet } from "react-router-dom";
 import "App.css";
 
 const HomePage: React.FC = () => {
   return (
     <>
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+      <div className="">
+        <header className="">
+          <div>
+            <Outlet />
+          </div>
         </header>
       </div>
     </>

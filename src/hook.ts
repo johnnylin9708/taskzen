@@ -20,6 +20,7 @@ export function useAuth() {
       email: data.get("email")?.toString(),
       password: data.get("password")?.toString(),
     });
+    if (!response?.data?.tokenData) return;
     localStorage.setItem("token", response?.data?.tokenData);
     setIsAuth(true);
     navigate("/");
@@ -29,7 +30,7 @@ export function useAuth() {
     // Remove the token from local storage and clear the user state
     localStorage.removeItem("token");
     setIsAuth(false);
-    navigate("/");
+    navigate("/login");
   }
 
   return { isAuth, authLogin, authLogout };
