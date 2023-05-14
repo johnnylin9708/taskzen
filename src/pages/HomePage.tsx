@@ -1,16 +1,25 @@
 import React from "react";
+import TaskCard from "components/TaskCard";
 import { Outlet } from "react-router-dom";
-import "App.css";
 
 const HomePage: React.FC = () => {
   return (
     <>
-      <div className="">
-        <header className="">
-          <div>
-            <Outlet />
+      <div className="container">
+        <div className="row mt-4">
+          <div className="col-3">
+            <TaskCard />
           </div>
-        </header>
+          <div className="col-3">
+            <TaskCard />
+          </div>
+          <div className="col-3">
+            <TaskCard />
+          </div>
+          <div className="col-3">
+            <TaskCard />
+          </div>
+        </div>
       </div>
     </>
   );

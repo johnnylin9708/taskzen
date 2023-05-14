@@ -50,7 +50,19 @@ export const createTeam = async (teamReq: {
       console.warn(err);
     });
 
-export const getAllMembers = async (id: number) =>
+export const getAllMembers = async () =>
+  await axios({
+    method: "get",
+    url: `${GATEWAY_URL}/members`,
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.warn(err);
+    });
+
+export const getAllMembersByTeamId = async (id: number) =>
   await axios({
     method: "get",
     url: `${GATEWAY_URL}/members/${id}`,
@@ -62,7 +74,7 @@ export const getAllMembers = async (id: number) =>
       console.warn(err);
     });
 
-export const createMember = async (teamReq: {
+export const createMember = async (memberReq: {
   teamId: number | null;
   name: string | undefined;
   description: string | undefined;
@@ -71,7 +83,7 @@ export const createMember = async (teamReq: {
     method: "post",
     url: `${GATEWAY_URL}/members`,
     data: {
-      ...teamReq,
+      ...memberReq,
     },
   })
     .then((res) => {

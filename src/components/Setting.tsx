@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { createMember, createTeam, getAllMembers, getAllTeams } from "API";
+import {
+  createMember,
+  createTeam,
+  getAllMembersByTeamId,
+  getAllTeams,
+} from "API";
 
 const Setting = () => {
   const [teams, setTeams] = useState<
@@ -47,6 +52,7 @@ const Setting = () => {
 
     const memberInfo = {
       teamId: team.id,
+      teamName: team.name,
       name: data.get("name")?.toString() || "",
       description: data.get("description")?.toString() || "",
     };
@@ -68,12 +74,39 @@ const Setting = () => {
     await modal.hide();
   };
 
+  const formReset = (formId: string) => {
+    const form = document.getElementById(formId);
+    if (form) {
+      const inputs = form.querySelectorAll<HTMLInputElement>(
+        "input, textarea, select"
+      );
+      inputs.forEach((input: HTMLInputElement) => {
+        if (input.type === "checkbox" || input.type === "radio") {
+          input.checked = false;
+        } else {
+          input.value = "";
+        }
+      });
+    }
+  };
+
+  const modalCloseListener = (modalId: string, modalFormId: string) => {
+    const modal = document.getElementById(modalId);
+    if (modal)
+      modal.addEventListener("hidden.bs.modal", (event) => {
+        formReset(modalFormId);
+      });
+  };
+
   useEffect(() => {
     async function fetchTeamData() {
       const teamsResponse = await getAllTeams();
       setTeams(teamsResponse.data);
     }
     fetchTeamData();
+
+    modalCloseListener("memberAdditionModal", "memberAdditionForm");
+    modalCloseListener("teamAdditionModal", "teamAdditionForm");
   }, []);
 
   return (
@@ -110,7 +143,9 @@ const Setting = () => {
                     style={{ cursor: "pointer" }}
                     onClick={async () => {
                       setTeam(team);
-                      const membersResponse = await getAllMembers(team.id);
+                      const membersResponse = await getAllMembersByTeamId(
+                        team.id
+                      );
                       setMembers(membersResponse.data);
                     }}
                   >
@@ -184,7 +219,10 @@ const Setting = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <form onSubmit={handleTeamAdditionModalSubmit}>
+            <form
+              id="teamAdditionForm"
+              onSubmit={handleTeamAdditionModalSubmit}
+            >
               <div className="modal-body">
                 <div className="mb-3">
                   <label className="form-label">TeamName</label>
@@ -246,7 +284,10 @@ const Setting = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <form onSubmit={handleMemberAdditionModalSubmit}>
+            <form
+              id="memberAdditionForm"
+              onSubmit={handleMemberAdditionModalSubmit}
+            >
               <div className="modal-body">
                 <div className="mb-3">
                   <label className="form-label">MemberName</label>

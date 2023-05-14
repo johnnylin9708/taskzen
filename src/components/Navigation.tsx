@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "hook";
+import TaskCreationModal from "./TaskCreationModal";
 
 const Navigation = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -12,7 +13,7 @@ const Navigation = () => {
   return (
     <>
       <nav
-        className="navbar bg-primary navbar-expand-lg px-5"
+        className="navbar text-bg-primary navbar-expand-lg px-5"
         data-bs-theme="dark"
       >
         <div className="container-fluid">
@@ -46,6 +47,16 @@ const Navigation = () => {
                   Setting
                 </a>
               </li>
+              <li className="nav-item">
+                <button
+                  type="button"
+                  className="btn btn-outline-warning mt-1"
+                  data-bs-toggle="modal"
+                  data-bs-target="#taskCreationModal"
+                >
+                  Create
+                </button>
+              </li>
             </ul>
             <button
               className="btn btn-outline-danger"
@@ -68,11 +79,7 @@ const Navigation = () => {
           </div>
         </div>
       </nav>
-
-      {/* <CreateTaskDialog
-        isDialogOpen={isDialogOpen}
-        handleDialogClose={handleDialogClose}
-      /> */}
+      <TaskCreationModal />
     </>
   );
 };

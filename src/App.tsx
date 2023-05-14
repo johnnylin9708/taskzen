@@ -25,7 +25,7 @@ function PrivateRoute() {
 
 const App: React.FC = () => {
   return (
-    <div className="App">
+    <div className="">
       <React.StrictMode>
         <BrowserRouter>
           <Navigation />
