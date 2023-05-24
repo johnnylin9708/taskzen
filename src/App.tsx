@@ -10,6 +10,7 @@ import { HomePage, LoginPage } from "pages";
 import Navigation from "components/Navigation";
 import Setting from "components/Setting";
 import { useAuth } from "hook";
+import WorkspacePage from "pages/WorkspacePage";
 
 function PrivateRoute() {
   const { isAuth } = useAuth();
@@ -34,6 +35,12 @@ const App: React.FC = () => {
             <Route path="/login" Component={LoginPage} />
             <Route element={<PrivateRoute />}>
               <Route path="/home" element={<HomePage />}>
+                {/* <Route element={<Setting />} path="setting" />
+                <Route element={<Member />} path="member" /> */}
+              </Route>
+            </Route>
+            <Route element={<PrivateRoute />}>
+              <Route path="/workspace" element={<WorkspacePage />}>
                 {/* <Route element={<Setting />} path="setting" />
                 <Route element={<Member />} path="member" /> */}
               </Route>

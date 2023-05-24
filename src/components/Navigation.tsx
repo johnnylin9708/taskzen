@@ -42,6 +42,15 @@ const Navigation = () => {
                 <a
                   className="nav-link active"
                   aria-current="page"
+                  href="/workspace"
+                >
+                  Workspace
+                </a>
+              </li>
+              <li className="nav-item">
+                <a
+                  className="nav-link active"
+                  aria-current="page"
                   href="/setting"
                 >
                   Setting
