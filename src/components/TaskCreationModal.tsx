@@ -1,6 +1,6 @@
 import { getAllMembers, getAllStatus, getAllTeams } from "API";
 import { useAuth } from "hook";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 
 const TaskCreationModal = () => {
   const [teams, setTeams] = useState<
@@ -15,7 +15,35 @@ const TaskCreationModal = () => {
     { id: number; name: string; description: string }[]
   >([]);
 
+  const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
+
+  const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
+
   const [username, setUsername] = useState<string>("");
+
+  const handleTeamCheckbox = (e: ChangeEvent<Element>) => {
+    const ischecked = (e.target as HTMLInputElement).checked;
+
+    if (!ischecked) {
+      const idx = selectedTeams.indexOf(e.target.id);
+      selectedTeams.splice(idx, 1);
+    } else {
+      selectedTeams.push(e.target.id);
+    }
+    setSelectedTeams([...selectedTeams]);
+  };
+
+  const handleMemberCheckbox = (e: ChangeEvent<Element>) => {
+    const ischecked = (e.target as HTMLInputElement).checked;
+
+    if (!ischecked) {
+      const idx = selectedMembers.indexOf(e.target.id);
+      selectedMembers.splice(idx, 1);
+    } else {
+      selectedMembers.push(e.target.id);
+    }
+    setSelectedMembers([...selectedMembers]);
+  };
 
   useEffect(() => {
     setUsername(localStorage.getItem("username") || "");
@@ -38,6 +66,7 @@ const TaskCreationModal = () => {
     }
     fetchStatusData();
   }, []);
+
   return (
     <>
       <div
@@ -49,7 +78,7 @@ const TaskCreationModal = () => {
         aria-labelledby="taskCreationModal"
         aria-hidden="true"
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-lg">
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="taskCreationModalLabel">
@@ -83,13 +112,32 @@ const TaskCreationModal = () => {
                     id="Initiator"
                     name="Initiator"
                     value={username}
-                    // placeholder="Task Title"
                     disabled
                   />
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Teams</label>
-                  <select
+                  <br />
+                  <div className="d-flex flex-row">
+                    {teams.map((team) => (
+                      <div className="m-2">
+                        <input
+                          type="checkbox"
+                          className="btn-check"
+                          id={team.name}
+                          autoComplete="off"
+                          onChange={handleTeamCheckbox}
+                        />
+                        <label
+                          className="btn btn-outline-primary"
+                          htmlFor={team.name}
+                        >
+                          {team.name}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  {/* <select
                     className="form-select"
                     id="team"
                     name="team"
@@ -100,11 +148,46 @@ const TaskCreationModal = () => {
                       teams.map((member) => (
                         <option value={member.id}>{`${member.name}`}</option>
                       ))}
-                  </select>
+                  </select> */}
                 </div>
-                <div className="mb-3">
+                <div className="mb-1">
                   <label className="form-label">Assignee</label>
-                  <select
+                  <br />
+                  <div className="d-flex flex-row flex-wrap">
+                    {selectedTeams.length > 0 ? (
+                      members.map((member) => {
+                        if (
+                          !selectedTeams.find(
+                            (team) => team === member.teamName
+                          )
+                        ) {
+                          return <></>;
+                        }
+                        return (
+                          <div className="m-2">
+                            <input
+                              type="checkbox"
+                              className="btn-check"
+                              id={member.name}
+                              autoComplete="off"
+                              onChange={handleMemberCheckbox}
+                            />
+                            <label
+                              className="btn btn-outline-success"
+                              htmlFor={member.name}
+                            >
+                              {`[${member.teamName}] ${member.name}`}
+                            </label>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="alert alert-primary" role="alert">
+                        Please Select a Team!
+                      </div>
+                    )}
+                  </div>
+                  {/* <select
                     className="form-select"
                     id="assignee"
                     name="assignee"
@@ -117,7 +200,7 @@ const TaskCreationModal = () => {
                           value={member.id}
                         >{`[${member.teamName}]  ${member.name}`}</option>
                       ))}
-                  </select>
+                  </select> */}
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Status</label>
