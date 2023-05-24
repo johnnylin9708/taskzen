@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import {
   createMember,
+  createStatus,
   createTeam,
   getAllMembersByTeamId,
+  getAllStatus,
   getAllTeams,
 } from "API";
+import TeamAdditionModal from "./TeamAdditionModal";
+import MemberAdditionModal from "./MemberAdditionModal";
+import StatusAdditionModal from "./StatusAdditionModal";
 
 const Setting = () => {
   const [teams, setTeams] = useState<
@@ -20,6 +25,10 @@ const Setting = () => {
   const [members, setMembers] = useState<
     { name: string; description: string }[]
   >([]);
+
+  const [status, setStatus] = useState<{ name: string; description: string }[]>(
+    []
+  );
 
   const handleTeamAdditionModalSubmit = async (
     event: React.MouseEvent<HTMLFormElement>
@@ -66,6 +75,25 @@ const Setting = () => {
     setMembers([...members, memberInfo]);
   };
 
+  const handleStatusAddtionSubmit = async (
+    event: React.MouseEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    const statusInfo = {
+      name: data.get("name")?.toString() || "",
+      description: data.get("description")?.toString() || "",
+    };
+    const response = await createStatus(statusInfo);
+
+    if (response.message === "created") {
+      await handleModalClosed("statusAdditionModal");
+    }
+
+    setStatus([...status, statusInfo]);
+  };
+
   const handleModalClosed = async (id: string) => {
     const modal = (window as any).bootstrap.Modal.getInstance(
       document.getElementById(`${id}`)
@@ -105,8 +133,15 @@ const Setting = () => {
     }
     fetchTeamData();
 
+    async function fetchStatusData() {
+      const response = await getAllStatus();
+      setStatus(response.data);
+    }
+    fetchStatusData();
+
     modalCloseListener("memberAdditionModal", "memberAdditionForm");
     modalCloseListener("teamAdditionModal", "teamAdditionForm");
+    modalCloseListener("statusAdditionModal", "statusAdditionForm");
   }, []);
 
   return (
@@ -196,137 +231,48 @@ const Setting = () => {
             </div>
           )}
         </div>
-      </div>
-      <div
-        className="modal fade"
-        id="teamAdditionModal"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabIndex={-1}
-        aria-labelledby="teamAdditionModal"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="teamAdditionModalLabel">
-                Team Addition
-              </h1>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <form
-              id="teamAdditionForm"
-              onSubmit={handleTeamAdditionModalSubmit}
-            >
-              <div className="modal-body">
-                <div className="mb-3">
-                  <label className="form-label">TeamName</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="name"
-                    name="name"
-                    placeholder="Team Name"
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Description</label>
-                  <textarea
-                    className="form-control"
-                    id="description"
-                    name="description"
-                    rows={3}
-                    required
-                  ></textarea>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Save
-                </button>
-              </div>
-            </form>
+        <hr className="my-5" />
+        <div className="row mb-5">
+          <div className="col-6">
+            <h3>Status</h3>
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+                  <th scope="col">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#statusAdditionModal"
+                    >
+                      Add
+                    </button>
+                  </th>
+                </tr>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {status.map((status, index) => (
+                  <tr>
+                    <th scope="row">{index}</th>
+                    <td>{status.name}</td>
+                    <td>{status.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-      <div
-        className="modal fade"
-        id="memberAdditionModal"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabIndex={-1}
-        aria-labelledby="memberAdditionModal"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="memberAdditionModalLabel">
-                Member Addition
-              </h1>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <form
-              id="memberAdditionForm"
-              onSubmit={handleMemberAdditionModalSubmit}
-            >
-              <div className="modal-body">
-                <div className="mb-3">
-                  <label className="form-label">MemberName</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="name"
-                    name="name"
-                    placeholder="Member Name"
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Description</label>
-                  <textarea
-                    className="form-control"
-                    id="description"
-                    name="description"
-                    rows={3}
-                    required
-                  ></textarea>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Save
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+      <TeamAdditionModal submit={handleTeamAdditionModalSubmit} />
+      <MemberAdditionModal submit={handleMemberAdditionModalSubmit} />
+      <StatusAdditionModal submit={handleStatusAddtionSubmit} />
     </>
   );
 };

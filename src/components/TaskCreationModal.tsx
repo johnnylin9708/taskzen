@@ -1,17 +1,42 @@
-import { getAllMembers } from "API";
+import { getAllMembers, getAllStatus, getAllTeams } from "API";
+import { useAuth } from "hook";
 import React, { useEffect, useState } from "react";
 
 const TaskCreationModal = () => {
+  const [teams, setTeams] = useState<
+    { id: number; name: string; description: string }[]
+  >([]);
+
   const [members, setMembers] = useState<
     { id: number; name: string; teamName: string }[]
   >([]);
 
+  const [status, setStatus] = useState<
+    { id: number; name: string; description: string }[]
+  >([]);
+
+  const [username, setUsername] = useState<string>("");
+
   useEffect(() => {
+    setUsername(localStorage.getItem("username") || "");
+
+    async function fetchTeamData() {
+      const teamsResponse = await getAllTeams();
+      setTeams(teamsResponse.data);
+    }
+    fetchTeamData();
+
     async function fetchMemberData() {
       const response = await getAllMembers();
       setMembers(response.data);
     }
     fetchMemberData();
+
+    async function fetchStatusData() {
+      const response = await getAllStatus();
+      setStatus(response.data);
+    }
+    fetchStatusData();
   }, []);
   return (
     <>
@@ -52,18 +77,28 @@ const TaskCreationModal = () => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Initiator</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="Initiator"
+                    name="Initiator"
+                    value={username}
+                    // placeholder="Task Title"
+                    disabled
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Teams</label>
                   <select
                     className="form-select"
-                    id="initiator"
-                    name="initiator"
+                    id="team"
+                    name="team"
                     aria-label="Default select example"
                   >
                     <option selected>Please Select</option>
-                    {members.length > 0 &&
-                      members.map((member) => (
-                        <option
-                          value={member.id}
-                        >{`[${member.teamName}]  ${member.name}`}</option>
+                    {teams.length > 0 &&
+                      teams.map((member) => (
+                        <option value={member.id}>{`${member.name}`}</option>
                       ))}
                   </select>
                 </div>
@@ -93,8 +128,10 @@ const TaskCreationModal = () => {
                     aria-label="Default select example"
                   >
                     <option selected>Please Select</option>
-
-                    <option value={1}>123123123</option>
+                    {status.length > 0 &&
+                      status.map((status) => (
+                        <option value={status.id}>{`${status.name}`}</option>
+                      ))}
                   </select>
                 </div>
                 <div className="mb-3">

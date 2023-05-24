@@ -92,3 +92,33 @@ export const createMember = async (memberReq: {
     .catch((err) => {
       console.warn(err);
     });
+
+export const getAllStatus = async () =>
+  await axios({
+    method: "get",
+    url: `${GATEWAY_URL}/status`,
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.warn(err);
+    });
+
+export const createStatus = async (statusReq: {
+  name: string | undefined;
+  description: string | undefined;
+}) =>
+  await axios({
+    method: "post",
+    url: `${GATEWAY_URL}/status`,
+    data: {
+      ...statusReq,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.warn(err);
+    });

@@ -22,6 +22,7 @@ export function useAuth() {
     });
     if (!response?.data?.tokenData) return;
     localStorage.setItem("token", response?.data?.tokenData);
+    localStorage.setItem("username", response?.data?.username);
     setIsAuth(true);
     navigate("/");
   }
