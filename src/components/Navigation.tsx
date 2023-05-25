@@ -38,35 +38,37 @@ const Navigation = () => {
                   Home
                 </a>
               </li> */}
-              <li className="nav-item">
-                <a
-                  className="nav-link active"
-                  aria-current="page"
-                  href="/workspace"
-                >
-                  Workspace
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link active"
-                  aria-current="page"
-                  href="/setting"
-                >
-                  Setting
-                </a>
-              </li>
               {isAuth && (
-                <li className="nav-item">
-                  <button
-                    type="button"
-                    className="btn btn-outline-warning mt-1"
-                    data-bs-toggle="modal"
-                    data-bs-target="#taskCreationModal"
-                  >
-                    Create
-                  </button>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <a
+                      className="nav-link active"
+                      aria-current="page"
+                      href="/workspace"
+                    >
+                      Workspace
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      className="nav-link active"
+                      aria-current="page"
+                      href="/setting"
+                    >
+                      Setting
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <button
+                      type="button"
+                      className="btn btn-outline-warning mt-1"
+                      data-bs-toggle="modal"
+                      data-bs-target="#taskCreationModal"
+                    >
+                      Create
+                    </button>
+                  </li>
+                </>
               )}
             </ul>
             {isAuth && (
