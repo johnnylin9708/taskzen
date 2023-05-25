@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// const GATEWAY_URL = "http://localhost:8080";
 const GATEWAY_URL = "https://taskzen-backend.onrender.com";
 
 export const login = async (loginInfo: {
