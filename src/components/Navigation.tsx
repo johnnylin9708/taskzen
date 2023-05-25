@@ -71,13 +71,21 @@ const Navigation = () => {
                 </>
               )}
             </ul>
-            {isAuth && (
+            {isAuth ? (
               <button
                 className="btn btn-outline-danger"
                 aria-current="page"
                 onClick={authLogout}
               >
                 logout
+              </button>
+            ) : (
+              <button
+                className="btn btn-outline-danger"
+                aria-current="page"
+                onClick={() => navigate("/login")}
+              >
+                login
               </button>
             )}
             {/* <form className="d-flex" role="search">
