@@ -1,5 +1,5 @@
 import React from "react";
-import TaskCard from "components/Workspace";
+// import TaskCard from "components/Workspace";
 import { Outlet } from "react-router-dom";
 
 const HomePage: React.FC = () => {
@@ -7,7 +7,7 @@ const HomePage: React.FC = () => {
     <>
       <div className="container">
         <div className="row mt-4">
-          <div className="col-3">
+          {/* <div className="col-3">
             <TaskCard />
           </div>
           <div className="col-3">
@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
           </div>
           <div className="col-3">
             <TaskCard />
-          </div>
+          </div> */}
         </div>
       </div>
     </>

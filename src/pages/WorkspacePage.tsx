@@ -1,5 +1,5 @@
 import React from "react";
-import TaskCard from "components/Workspace";
+import Workspace from "components/Workspace";
 import { Outlet } from "react-router-dom";
 import SideBar from "components/SideBar";
 import WorkspaceAdditionModal from "components/WorkspaceAdditionModal";
@@ -17,16 +17,16 @@ const WorkspacePage: React.FC = () => {
         <br />
         <div className="row mt-4">
           <div className="col-3">
-            <TaskCard />
+            <Workspace />
           </div>
           <div className="col-3">
-            <TaskCard />
+            <Workspace />
           </div>
           <div className="col-3">
-            <TaskCard />
+            <Workspace />
           </div>
           <div className="col-3">
-            <TaskCard />
+            <Workspace />
           </div>
         </div>
       </div>
