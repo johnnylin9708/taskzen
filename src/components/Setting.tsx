@@ -38,7 +38,6 @@ const Setting = () => {
     const data = new FormData(event.currentTarget);
 
     const teamInfo = {
-      id: 0,
       name: data.get("name")?.toString() || "",
       description: data.get("description")?.toString() || "",
     };
@@ -47,9 +46,8 @@ const Setting = () => {
 
     if (response.message === "created") {
       await handleModalClosed("teamAdditionModal");
+      fetchTeamData();
     }
-
-    setTeams([...teams, teamInfo]);
   };
 
   const handleMemberAdditionModalSubmit = async (
@@ -70,9 +68,8 @@ const Setting = () => {
 
     if (response.message === "created") {
       await handleModalClosed("memberAdditionModal");
+      setMembers([...members, memberInfo]);
     }
-
-    setMembers([...members, memberInfo]);
   };
 
   const handleStatusAddtionSubmit = async (
@@ -89,9 +86,8 @@ const Setting = () => {
 
     if (response.message === "created") {
       await handleModalClosed("statusAdditionModal");
+      setStatus([...status, statusInfo]);
     }
-
-    setStatus([...status, statusInfo]);
   };
 
   const handleModalClosed = async (id: string) => {
@@ -126,11 +122,12 @@ const Setting = () => {
       });
   };
 
+  async function fetchTeamData() {
+    const teamsResponse = await getAllTeams();
+    setTeams(teamsResponse.data);
+  }
+
   useEffect(() => {
-    async function fetchTeamData() {
-      const teamsResponse = await getAllTeams();
-      setTeams(teamsResponse.data);
-    }
     fetchTeamData();
 
     async function fetchStatusData() {
