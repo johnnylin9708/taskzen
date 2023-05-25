@@ -33,12 +33,10 @@ const App: React.FC = () => {
           <Routes>
             {/* <Route path="/" element={<HomePage />} /> */}
             <Route path="/login" Component={LoginPage} />
-            <Route element={<PrivateRoute />}>
+            {/* <Route element={<PrivateRoute />}>
               <Route path="/home" element={<HomePage />}>
-                {/* <Route element={<Setting />} path="setting" />
-                <Route element={<Member />} path="member" /> */}
               </Route>
-            </Route>
+            </Route> */}
             <Route element={<PrivateRoute />}>
               <Route path="/workspace" element={<WorkspacePage />}>
                 {/* <Route element={<Setting />} path="setting" />
@@ -46,10 +44,7 @@ const App: React.FC = () => {
               </Route>
             </Route>
             <Route element={<PrivateRoute />}>
-              <Route path="/setting" element={<Setting />}>
-                {/* <Route element={<Setting />} path="setting" />
-                <Route element={<Member />} path="member" /> */}
-              </Route>
+              <Route path="/setting" element={<Setting />}></Route>
             </Route>
           </Routes>
         </BrowserRouter>

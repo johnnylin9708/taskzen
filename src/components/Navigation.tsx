@@ -33,11 +33,11 @@ const Navigation = () => {
           </a>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/home">
                   Home
                 </a>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <a
                   className="nav-link active"
@@ -56,24 +56,28 @@ const Navigation = () => {
                   Setting
                 </a>
               </li>
-              <li className="nav-item">
-                <button
-                  type="button"
-                  className="btn btn-outline-warning mt-1"
-                  data-bs-toggle="modal"
-                  data-bs-target="#taskCreationModal"
-                >
-                  Create
-                </button>
-              </li>
+              {isAuth && (
+                <li className="nav-item">
+                  <button
+                    type="button"
+                    className="btn btn-outline-warning mt-1"
+                    data-bs-toggle="modal"
+                    data-bs-target="#taskCreationModal"
+                  >
+                    Create
+                  </button>
+                </li>
+              )}
             </ul>
-            <button
-              className="btn btn-outline-danger"
-              aria-current="page"
-              onClick={authLogout}
-            >
-              logout
-            </button>
+            {isAuth && (
+              <button
+                className="btn btn-outline-danger"
+                aria-current="page"
+                onClick={authLogout}
+              >
+                logout
+              </button>
+            )}
             {/* <form className="d-flex" role="search">
               <input
                 className="form-control me-2"

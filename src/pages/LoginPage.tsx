@@ -27,7 +27,7 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (isAuth) {
-      navigate("/home");
+      navigate("/workspace");
     }
   }, [isAuth]);
 
