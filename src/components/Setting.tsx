@@ -45,9 +45,9 @@ const Setting = () => {
     const response = await createTeam(teamInfo);
 
     if (response.message === "created") {
-      await handleModalClosed("teamAdditionModal");
       fetchTeamData();
     }
+    await handleModalClosed("teamAdditionModal");
   };
 
   const handleMemberAdditionModalSubmit = async (
@@ -67,9 +67,9 @@ const Setting = () => {
     const response = await createMember(memberInfo);
 
     if (response.message === "created") {
-      await handleModalClosed("memberAdditionModal");
       setMembers([...members, memberInfo]);
     }
+    await handleModalClosed("memberAdditionModal");
   };
 
   const handleStatusAddtionSubmit = async (
@@ -85,9 +85,10 @@ const Setting = () => {
     const response = await createStatus(statusInfo);
 
     if (response.message === "created") {
-      await handleModalClosed("statusAdditionModal");
       setStatus([...status, statusInfo]);
     }
+
+    await handleModalClosed("statusAdditionModal");
   };
 
   const handleModalClosed = async (id: string) => {
