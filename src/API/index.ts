@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Task, UpdateTask } from "interface/common";
 
 // const GATEWAY_URL = "http://localhost:8080";
 const GATEWAY_URL = "https://taskzen-backend.onrender.com";
@@ -105,6 +106,21 @@ export const createTask = async (taskReq: {
   await axios({
     method: "post",
     url: `${GATEWAY_URL}/tasks`,
+    data: {
+      ...taskReq,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.warn(err);
+    });
+
+export const updateTask = async (taskReq: UpdateTask, taskId: number) =>
+  await axios({
+    method: "post",
+    url: `${GATEWAY_URL}/tasks/${taskId}`,
     data: {
       ...taskReq,
     },

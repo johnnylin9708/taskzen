@@ -1,20 +1,28 @@
+import {
+  createTask,
+  getAllMembers,
+  getAllStatus,
+  getAllTeams,
+  updateTask,
+} from "API";
+import { useAuth } from "hook";
 import React, {
   ChangeEvent,
+  Dispatch,
+  SetStateAction,
   useEffect,
   useState,
-  SetStateAction,
-  Dispatch,
 } from "react";
-import { createTask, getAllMembers, getAllStatus, getAllTeams } from "API";
-import { useAuth } from "hook";
 import AlertMessage from "./AlertMessage";
+import { Task, UpdateTask } from "interface/common";
 
 interface Props {
+  task: Task;
   setRefresh: Dispatch<SetStateAction<boolean>>;
 }
-
-const TaskCreationModal = (props: Props) => {
-  const { setRefresh } = props;
+const TaskUpdateModal = (props: Props) => {
+  const { task, setRefresh } = props;
+  const { id, title, initiator, startDate, dueDate, status, content } = task;
   const { authInfo } = useAuth();
 
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -26,7 +34,7 @@ const TaskCreationModal = (props: Props) => {
     { id: number; name: string; teamName: string }[]
   >([]);
 
-  const [status, setStatus] = useState<
+  const [statusList, setStatusList] = useState<
     { id: number; name: string; description: string }[]
   >([]);
 
@@ -66,8 +74,17 @@ const TaskCreationModal = (props: Props) => {
     //   for(var pair of .entries()) {
     //     console.log(pair[0]+ ', '+ pair[1]); // Get the key and the value
     //  }
+    const originTask = {
+      title: task.title,
+      initiator: task.initiator,
+      startDate: task.startDate,
+      dueDate: task.dueDate,
+      status: task.status,
+      content: task.content,
+    };
 
-    const taskInfo = {
+    const taskInfo: UpdateTask = {
+      ...originTask,
       title: data.get("title")?.toString() || "",
       initiator: data.get("initiator")?.toString() || authInfo.id,
       startDate: data.get("startDate")?.toString() || "",
@@ -76,13 +93,13 @@ const TaskCreationModal = (props: Props) => {
       content: data.get("content")?.toString() || "",
     };
 
-    const response = await createTask(taskInfo);
+    const response = await updateTask(taskInfo, task.id);
 
-    if (response.message === "created") {
+    if (response.message === "updated") {
       // fetchTeamData();
       setRefresh(true);
     }
-    await handleModalClosed("taskCreationModal");
+    await handleModalClosed("taskUpdateModal");
   };
 
   const handleModalClosed = async (id: string) => {
@@ -108,7 +125,7 @@ const TaskCreationModal = (props: Props) => {
 
     async function fetchStatusData() {
       const response = await getAllStatus();
-      setStatus(response.data);
+      setStatusList(response.data);
     }
     fetchStatusData();
   }, []);
@@ -118,17 +135,17 @@ const TaskCreationModal = (props: Props) => {
       {errorMsg && <AlertMessage errorMessage={errorMsg} />}
       <div
         className="modal fade"
-        id="taskCreationModal"
+        id="taskUpdateModal"
         data-bs-backdrop="static"
         data-bs-keyboard="false"
         tabIndex={-1}
-        aria-labelledby="taskCreationModal"
+        aria-labelledby="taskUpdateModal"
         aria-hidden="true"
       >
         <div className="modal-dialog modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="taskCreationModalLabel">
+              <h1 className="modal-title fs-5" id="taskUpdateModalLabel">
                 Task
               </h1>
               <button
@@ -147,6 +164,7 @@ const TaskCreationModal = (props: Props) => {
                     className="form-control"
                     id="title"
                     name="title"
+                    defaultValue={title}
                     placeholder="Task Title"
                     required
                   />
@@ -158,7 +176,7 @@ const TaskCreationModal = (props: Props) => {
                     className="form-control"
                     id="initiator"
                     name="initiator"
-                    value={authInfo.username}
+                    defaultValue={authInfo.username}
                     disabled
                   />
                 </div>
@@ -169,6 +187,7 @@ const TaskCreationModal = (props: Props) => {
                     className="mx-3 px-3"
                     id="startDate"
                     name="startDate"
+                    defaultValue={startDate}
                   />
                 </div>
                 <div className="mb-3">
@@ -178,6 +197,7 @@ const TaskCreationModal = (props: Props) => {
                     className="mx-3 px-3"
                     id="dueDate"
                     name="dueDate"
+                    defaultValue={dueDate}
                   />
                 </div>
                 {/* <div className="mb-3">
@@ -250,9 +270,11 @@ const TaskCreationModal = (props: Props) => {
                     aria-label="Default select example"
                   >
                     <option selected>Please Select</option>
-                    {status.length > 0 &&
-                      status.map((status) => (
-                        <option value={status.id}>{`${status.name}`}</option>
+                    {statusList.length > 0 &&
+                      statusList.map((status) => (
+                        <option
+                          defaultValue={status.id}
+                        >{`${status.name}`}</option>
                       ))}
                   </select>
                 </div>
@@ -267,7 +289,7 @@ const TaskCreationModal = (props: Props) => {
                     <option selected>Please Select</option>
                     {status.length > 0 &&
                       status.map((status) => (
-                        <option value={status.id}>{`${status.name}`}</option>
+                        <option defaultValue={status.id}>{`${status.name}`}</option>
                       ))}
                   </select> */}
                 </div>
@@ -277,6 +299,7 @@ const TaskCreationModal = (props: Props) => {
                     className="form-control"
                     id="content"
                     name="content"
+                    defaultValue={content}
                     rows={3}
                   ></textarea>
                 </div>
@@ -290,7 +313,7 @@ const TaskCreationModal = (props: Props) => {
                   Close
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  Create
+                  Save
                 </button>
               </div>
             </form>
@@ -301,4 +324,4 @@ const TaskCreationModal = (props: Props) => {
   );
 };
 
-export default TaskCreationModal;
+export default TaskUpdateModal;

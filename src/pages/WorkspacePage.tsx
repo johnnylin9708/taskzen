@@ -6,44 +6,38 @@ import WorkspaceAdditionModal from "components/WorkspaceAdditionModal";
 import { getAllTasksByUserId } from "API";
 import { useAuth } from "hook";
 import Loading from "components/Loading";
-// import TaskUpdateModal from "components/TaskUpdateModal";
+import TaskUpdateModal from "components/TaskUpdateModal";
 import { Task } from "interface/common";
 import TaskCreationModal from "components/TaskCreationModal";
 
-const dateNum = 3;
+const dateNum = 7;
 const WorkspacePage: React.FC = () => {
   const { authInfo } = useAuth();
 
   const [myTasks, setMyTasks] = useState<Task[]>([]);
   const [dateList, setDateList] = useState<string[]>([]);
   const [task, setTask] = useState<Task>({
+    id: 0,
     title: "",
     initiator: "",
     startDate: "",
     dueDate: "",
-    state: "",
+    status: "",
     content: "",
   });
   const [isFetching, setIsFetching] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const getDate = (next: number) => {
     const date = new Date(new Date().setDate(new Date().getDate() + next));
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   };
 
-  // const handleTaskUpdateModal = async (task: Task) => {
-  //   setTask(task);
-  //   await modalShowListener("taskUpdateModal");
-  // };
+  const fetchMyTasks = async () => {
+    const response = await getAllTasksByUserId(authInfo.id);
 
-  // const modalShowListener = async (modalId: string) => {
-  //   const modal = (window as any).bootstrap.Modal.getInstance(
-  //     document.getElementById(`${modalId}`)
-  //   );
-  //   if (modal) {
-  //     await modal.show();
-  //   }
-  // };
+    setMyTasks(response.data);
+  };
 
   useEffect(() => {
     setIsFetching(true);
@@ -55,17 +49,18 @@ const WorkspacePage: React.FC = () => {
       setDateList(tempList);
     }
 
-    const fetchMyTasks = async () => {
-      const response = await getAllTasksByUserId(authInfo.id);
-
-      setMyTasks(response.data);
-    };
-
     if (authInfo.id) {
       fetchMyTasks();
     }
     setIsFetching(false);
   }, [authInfo]);
+
+  useEffect(() => {
+    if (refresh) {
+      fetchMyTasks();
+      setRefresh(false);
+    }
+  }, [refresh]);
 
   return (
     <>
@@ -101,9 +96,11 @@ const WorkspacePage: React.FC = () => {
                       {myTasksInDate.map((myTask) => (
                         <li
                           style={{ cursor: "pointer" }}
-                          // onClick={() => handleTaskUpdateModal(myTask)}
+                          onClick={() => setTask(myTask)}
+                          data-bs-toggle="modal"
+                          data-bs-target="#taskUpdateModal"
                         >
-                          {myTask.title}
+                          {`${myTask.dueDate} / ${myTask.title}`}
                         </li>
                       ))}
                     </ul>
@@ -115,9 +112,9 @@ const WorkspacePage: React.FC = () => {
           <div className="col">
             <h3 className="mt-5">任務邀請</h3>
             <ul>
+              {/* <li>任務名稱</li>
               <li>任務名稱</li>
-              <li>任務名稱</li>
-              <li>任務名稱</li>
+              <li>任務名稱</li> */}
             </ul>
             <h3 className="mt-5">備忘錄</h3>
             <ul>
@@ -160,8 +157,8 @@ const WorkspacePage: React.FC = () => {
           </div>
         </div> */}
       </div>
-      <TaskCreationModal />
-      {/* <TaskUpdateModal task={task} /> */}
+      <TaskCreationModal setRefresh={setRefresh} />
+      <TaskUpdateModal task={task} setRefresh={setRefresh} />
     </>
   );
 };
