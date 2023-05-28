@@ -94,6 +94,40 @@ export const createMember = async (memberReq: {
       console.warn(err);
     });
 
+export const createTask = async (taskReq: {
+  title: string | null;
+  initiator: string | null;
+  startDate: string | null;
+  dueDate: string | null;
+  status: string | null;
+  content: string | null;
+}) =>
+  await axios({
+    method: "post",
+    url: `${GATEWAY_URL}/tasks`,
+    data: {
+      ...taskReq,
+    },
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.warn(err);
+    });
+
+export const getAllTasksByUserId = async (id: string) =>
+  await axios({
+    method: "get",
+    url: `${GATEWAY_URL}/tasks/${id}`,
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.warn(err);
+    });
+
 export const getAllStatus = async () =>
   await axios({
     method: "get",

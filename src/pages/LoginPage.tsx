@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authvalidator } from "validators/index";
 import { useAuth } from "hook";
+import Loading from "components/Loading";
+import AlertMessage from "components/AlertMessage";
 
 const LoginPage: React.FC = () => {
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const navigate = useNavigate();
-  const { isAuth, authLogin } = useAuth();
+  const { authInfo, authLogin } = useAuth();
+  const [isFetching, setIsFetching] = useState(false);
 
   const handleSubmit = async (event: React.MouseEvent<HTMLFormElement>) => {
+    setIsFetching(true);
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
@@ -22,17 +26,28 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    await authLogin(data);
+    const response = await authLogin(data);
+
+    if (response.status != 200) {
+      setErrorMsg(response.message);
+      setTimeout(() => {
+        setErrorMsg("");
+      }, 500);
+    }
+
+    setIsFetching(false);
   };
 
   useEffect(() => {
-    if (isAuth) {
+    if (authInfo.id) {
       navigate("/workspace");
     }
-  }, [isAuth]);
+  }, [authInfo]);
 
   return (
     <>
+      {isFetching && <Loading />}
+      {errorMsg && <AlertMessage errorMessage={errorMsg} />}
       <div className="container mt-5 shadow">
         <div className="row">
           <div

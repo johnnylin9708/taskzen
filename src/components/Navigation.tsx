@@ -5,7 +5,7 @@ import TaskCreationModal from "./TaskCreationModal";
 
 const Navigation = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const { isAuth, authLogout } = useAuth();
+  const { authInfo, authLogout } = useAuth();
   const navigate = useNavigate();
 
   const handleCreateTask = () => {};
@@ -38,7 +38,7 @@ const Navigation = () => {
                   Home
                 </a>
               </li> */}
-              {isAuth && (
+              {authInfo.id && (
                 <>
                   <li className="nav-item">
                     <a
@@ -49,7 +49,7 @@ const Navigation = () => {
                       Workspace
                     </a>
                   </li>
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                     <a
                       className="nav-link active"
                       aria-current="page"
@@ -67,11 +67,11 @@ const Navigation = () => {
                     >
                       Create
                     </button>
-                  </li>
+                  </li> */}
                 </>
               )}
             </ul>
-            {isAuth ? (
+            {authInfo.id ? (
               <button
                 className="btn btn-outline-danger"
                 aria-current="page"
@@ -102,7 +102,6 @@ const Navigation = () => {
           </div>
         </div>
       </nav>
-      <TaskCreationModal />
     </>
   );
 };

@@ -1,8 +1,12 @@
-import { getAllMembers, getAllStatus, getAllTeams } from "API";
+import { createTask, getAllMembers, getAllStatus, getAllTeams } from "API";
 import { useAuth } from "hook";
 import React, { ChangeEvent, useEffect, useState } from "react";
+import AlertMessage from "./AlertMessage";
 
 const TaskCreationModal = () => {
+  const { authInfo } = useAuth();
+
+  const [errorMsg, setErrorMsg] = useState<string>("");
   const [teams, setTeams] = useState<
     { id: number; name: string; description: string }[]
   >([]);
@@ -18,8 +22,6 @@ const TaskCreationModal = () => {
   const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
 
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
-
-  const [username, setUsername] = useState<string>("");
 
   const handleTeamCheckbox = (e: ChangeEvent<Element>) => {
     const ischecked = (e.target as HTMLInputElement).checked;
@@ -45,20 +47,52 @@ const TaskCreationModal = () => {
     setSelectedMembers([...selectedMembers]);
   };
 
+  const handleTaskSubmit = async (event: React.MouseEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const data = new FormData(event.currentTarget);
+
+    //   for(var pair of .entries()) {
+    //     console.log(pair[0]+ ', '+ pair[1]); // Get the key and the value
+    //  }
+
+    const taskInfo = {
+      title: data.get("title")?.toString() || "",
+      initiator: data.get("initiator")?.toString() || authInfo.id,
+      startDate: data.get("startDate")?.toString() || "",
+      dueDate: data.get("dueDate")?.toString() || "",
+      status: data.get("status")?.toString() || "",
+      content: data.get("content")?.toString() || "",
+    };
+
+    const response = await createTask(taskInfo);
+
+    if (response.message === "created") {
+      // fetchTeamData();
+    }
+    await handleModalClosed("taskCreationModal");
+  };
+
+  const handleModalClosed = async (id: string) => {
+    const modal = (window as any).bootstrap.Modal.getInstance(
+      document.getElementById(`${id}`)
+    );
+
+    await modal.hide();
+  };
+
   useEffect(() => {
-    setUsername(localStorage.getItem("username") || "");
+    // async function fetchTeamData() {
+    //   const teamsResponse = await getAllTeams();
+    //   setTeams(teamsResponse.data);
+    // }
+    // fetchTeamData();
 
-    async function fetchTeamData() {
-      const teamsResponse = await getAllTeams();
-      setTeams(teamsResponse.data);
-    }
-    fetchTeamData();
-
-    async function fetchMemberData() {
-      const response = await getAllMembers();
-      setMembers(response.data);
-    }
-    fetchMemberData();
+    // async function fetchMemberData() {
+    //   const response = await getAllMembers();
+    //   setMembers(response.data);
+    // }
+    // fetchMemberData();
 
     async function fetchStatusData() {
       const response = await getAllStatus();
@@ -69,6 +103,7 @@ const TaskCreationModal = () => {
 
   return (
     <>
+      {errorMsg && <AlertMessage errorMessage={errorMsg} />}
       <div
         className="modal fade"
         id="taskCreationModal"
@@ -91,7 +126,7 @@ const TaskCreationModal = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <form>
+            <form onSubmit={handleTaskSubmit}>
               <div className="modal-body">
                 <div className="mb-3">
                   <label className="form-label">Title</label>
@@ -109,13 +144,31 @@ const TaskCreationModal = () => {
                   <input
                     type="text"
                     className="form-control"
-                    id="Initiator"
-                    name="Initiator"
-                    value={username}
+                    id="initiator"
+                    name="initiator"
+                    value={authInfo.username}
                     disabled
                   />
                 </div>
                 <div className="mb-3">
+                  <label className="form-label">Start Date</label>
+                  <input
+                    type="date"
+                    className="mx-3 px-3"
+                    id="startDate"
+                    name="startDate"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label me-1">Due Date</label>
+                  <input
+                    type="date"
+                    className="mx-3 px-3"
+                    id="dueDate"
+                    name="dueDate"
+                  />
+                </div>
+                {/* <div className="mb-3">
                   <label className="form-label">Teams</label>
                   <br />
                   <div className="d-flex flex-row">
@@ -137,18 +190,6 @@ const TaskCreationModal = () => {
                       </div>
                     ))}
                   </div>
-                  {/* <select
-                    className="form-select"
-                    id="team"
-                    name="team"
-                    aria-label="Default select example"
-                  >
-                    <option selected>Please Select</option>
-                    {teams.length > 0 &&
-                      teams.map((member) => (
-                        <option value={member.id}>{`${member.name}`}</option>
-                      ))}
-                  </select> */}
                 </div>
                 <div className="mb-1">
                   <label className="form-label">Assignee</label>
@@ -187,21 +228,7 @@ const TaskCreationModal = () => {
                       </div>
                     )}
                   </div>
-                  {/* <select
-                    className="form-select"
-                    id="assignee"
-                    name="assignee"
-                    aria-label="Default select example"
-                  >
-                    <option selected>Please Select</option>
-                    {members.length > 0 &&
-                      members.map((member) => (
-                        <option
-                          value={member.id}
-                        >{`[${member.teamName}]  ${member.name}`}</option>
-                      ))}
-                  </select> */}
-                </div>
+                </div> */}
                 <div className="mb-3">
                   <label className="form-label">Status</label>
                   <select
@@ -218,13 +245,27 @@ const TaskCreationModal = () => {
                   </select>
                 </div>
                 <div className="mb-3">
+                  <label className="form-label">Board</label>
+                  {/* <select
+                    className="form-select"
+                    id="board"
+                    name="board"
+                    aria-label="Default select example"
+                  >
+                    <option selected>Please Select</option>
+                    {status.length > 0 &&
+                      status.map((status) => (
+                        <option value={status.id}>{`${status.name}`}</option>
+                      ))}
+                  </select> */}
+                </div>
+                <div className="mb-3">
                   <label className="form-label">Content</label>
                   <textarea
                     className="form-control"
-                    id="description"
-                    name="description"
+                    id="content"
+                    name="content"
                     rows={3}
-                    required
                   ></textarea>
                 </div>
               </div>

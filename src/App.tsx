@@ -13,7 +13,7 @@ import { useAuth } from "hook";
 import WorkspacePage from "pages/WorkspacePage";
 
 function PrivateRoute() {
-  const { isAuth } = useAuth();
+  const { authInfo } = useAuth();
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ function PrivateRoute() {
   }, []);
   if (isFetching) return null;
 
-  return isAuth ? <Outlet /> : <Navigate to="/login" />;
+  return authInfo.id ? <Outlet /> : <Navigate to="/login" />;
 }
 
 const App: React.FC = () => {
