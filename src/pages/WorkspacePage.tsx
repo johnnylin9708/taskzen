@@ -86,7 +86,13 @@ const WorkspacePage: React.FC = () => {
             <ul>
               {dateList.map((date) => {
                 const myTasksInDate = myTasks.filter(
-                  (myTask) => new Date(myTask.dueDate) > new Date(date)
+                  (myTask) =>
+                    new Date(myTask.dueDate) > new Date(date) &&
+                    new Date(
+                      new Date(myTask.startDate).setDate(
+                        new Date(myTask.startDate).getDate() - 1
+                      )
+                    ) < new Date(date)
                 );
 
                 return (
