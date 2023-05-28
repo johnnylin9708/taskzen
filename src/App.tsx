@@ -32,6 +32,12 @@ const App: React.FC = () => {
           <Navigation />
           <Routes>
             {/* <Route path="/" element={<HomePage />} /> */}
+            <Route element={<PrivateRoute />}>
+              <Route path="/">
+                {/* <Route element={<Setting />} path="setting" />
+                <Route element={<Member />} path="member" /> */}
+              </Route>
+            </Route>
             <Route path="/login" Component={LoginPage} />
             {/* <Route element={<PrivateRoute />}>
               <Route path="/home" element={<HomePage />}>
